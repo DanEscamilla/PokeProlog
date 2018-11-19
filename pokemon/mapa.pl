@@ -1,11 +1,12 @@
 :-ensure_loaded("funciones-genericas.pl").
 :-ensure_loaded("mapa-global.pl").
+:-ensure_loaded("mapa-ciudad.pl").
 :-dynamic
   jugadorSeMovio/0,
   tipoTransicion/1,
   transicion/1,
   mapa/2,
-  objetoEnMapa/3,
+  objetoEnMapa/4,
   posicionJugador/2,
   posicionVista/2.
 
@@ -26,8 +27,15 @@ codigoADireccion(27,"Terminar el programa").
 vista(30,30).
 posicionVista(0,0).
 
+generarObjetos([]).
+generarObjetos([[DescVisual,X,Y,Nombre]|ObjetosRestantes]):-
+  assert(objetoEnMapa(DescVisual,X,Y,Nombre)),
+  generarObjetos(ObjetosRestantes).
+
 
 abrirMapa:-
+  posicionJugador(JugadorX,JugadorY),
+  moverPosicionVista(JugadorX,JugadorY),
   correr.
 
 correr:-
@@ -61,13 +69,13 @@ moverJugador(NuevaX,NuevaY):-
   jugadorSeMovio.
 
 mandarCollisionConObjeto(NuevaX,NuevaY):-
-  objetoEnMapa(NombreObjeto,NuevaX,NuevaY),
-  collisionMapa(NombreObjeto,NuevaX,NuevaY).
+  objetoEnMapa(DescObjeto,NuevaX,NuevaY,NombreObjeto),
+  collisionMapa(DescObjeto,NuevaX,NuevaY,NombreObjeto).
 mandarCollisionConObjeto(_,_).
 
-collisionMapa(NombreObjeto,NuevaX,NuevaY):-
-  nl,write(" Chocaste con "),write(NombreObjeto),nl,
-  abort.
+collisionMapa(_,_,_,_).
+  % nl,write(" Chocaste con "),write(NombreObjeto),nl,
+  % abort.
 
 validarMovimiento(X,Y):-
   not(hayPared(X,Y)),
@@ -75,12 +83,12 @@ validarMovimiento(X,Y):-
 
 estaDentroDeMapa(X,Y):-
   mapa(Anchura,Altura),
+  AlturaLimite is Altura -1,
   X>0,X=<Anchura,
-  Y>0,Y=<Altura.
+  Y>0,Y=<AlturaLimite.
 
-hayPared(X,Y):-objetoEnMapa("---",X,Y). %pared horizontal
-hayPared(X,Y):-objetoEnMapa(" | ",X,Y). %pared vertical
-
+hayPared(X,Y):-objetoEnMapa(_,X,Y,"wall"). %pared horizontal
+hayPared(X,Y):-objetoEnMapa(_,X,Y,""). %pared vertical
 
 moverPosicionVista(JugadorX,JugadorY):-
   vista(AnchuraVista,AlturaVista),
@@ -90,29 +98,29 @@ moverPosicionVista(JugadorX,JugadorY):-
 
 
 moverPosicionVistaVertical(JugadorY,AlturaVista,AlturaMapa):-
-  PrimeraMitadVertical is AlturaVista/2,
-  UltimaMitadVertical is AlturaMapa - PrimeraMitadVertical,
-  (JugadorY >= PrimeraMitadVertical, JugadorY =< UltimaMitadVertical),
-  actualizarYVista(JugadorY,PrimeraMitadVertical).
+  MitadVertical is AlturaVista/2,
+  LimiteInferiror is AlturaMapa - AlturaVista,
+  VistaY is JugadorY-MitadVertical,
+  VistaYAjustada is max(0,min(LimiteInferiror,VistaY)),
+  actualizarYVista(VistaYAjustada).
 moverPosicionVistaVertical(_,_,_).
 
 moverPosicionVistaHorizontal(JugadorX,AnchuraVista,AnchuraMapa):-
-  PrimeraMitadHorizontal is AnchuraVista/2,
-  UltimaMitadHorizontal is AnchuraMapa - PrimeraMitadHorizontal,
-  (JugadorX >= PrimeraMitadHorizontal, JugadorX =< UltimaMitadHorizontal),
-  actualizarXVista(JugadorX,PrimeraMitadHorizontal).
+  MitadHorizontal is AnchuraVista/2,
+  LimiteDerecho is AnchuraMapa - AnchuraVista,
+  VistaX is JugadorX-MitadHorizontal,
+  VistaXAjustada is max(0,min(LimiteDerecho,VistaX)),
+  actualizarXVista(VistaXAjustada).
 moverPosicionVistaHorizontal(_,_,_).
 
 
-actualizarXVista(JugadorX,MitadVistaHorizontal):-
+actualizarXVista(NuevaVistaX):-
   posicionVista(_,VistaY),
-  VistaX is JugadorX - MitadVistaHorizontal,
-  cambiarHecho(posicionVista(_,_),posicionVista(VistaX,VistaY)).
+  cambiarHecho(posicionVista(_,_),posicionVista(NuevaVistaX,VistaY)).
 
-actualizarYVista(JugadorY,MitadVistaVertical):-
+actualizarYVista(NuevaVistaY):-
   posicionVista(VistaX,_),
-  VistaY is JugadorY - MitadVistaVertical,
-  cambiarHecho(posicionVista(_,_),posicionVista(VistaX,VistaY)).
+  cambiarHecho(posicionVista(_,_),posicionVista(VistaX,NuevaVistaY)).
 
 ajustarPosicionAVista(X,Y,XAjustada,YAjustada):-
   posicionVista(VistaX,VistaY),
@@ -166,8 +174,8 @@ imprimirCeldaAjustada(XEnVista,YEnVista):-
   write("Tu ").
 
 imprimirCeldaAjustada(XEnVista,YEnVista):-
-  objetoEnMapa(Nombre,XEnVista,YEnVista),
-  string_chars(Nombre,[L1,L2,L3|_]), %primeras 3 letras del nombre
+  objetoEnMapa(DescVisual,XEnVista,YEnVista,_),
+  string_chars(DescVisual,[L1,L2,L3|_]), %primeras 3 letras del nombre
   write(L1),write(L2),write(L3).
 
 imprimirCeldaAjustada(_,YEnVista):-

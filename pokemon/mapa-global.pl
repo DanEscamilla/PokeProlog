@@ -1,6 +1,6 @@
 listaObjetosEnMapaGlobal([
-  ["Paleta",2,2],
-  ["Verde",5,5]
+  ["Pal",2,2,"Paleta"],
+  ["Ver",5,5,"Verde"]
 ]).
 
 posicionJugadorGlobal(1,1).
@@ -11,14 +11,9 @@ definirMapaGlobal:-
   posicionJugadorGlobal(X,Y),
   cambiarHecho(posicionJugador(_,_),posicionJugador(X,Y)),
   cambiarHecho(jugadorSeMovio,(jugadorSeMovio:-jugadorSeMovioAdaptador)),
-  retractall(objetoEnMapa(_,_,_)),
+  retractall(objetoEnMapa(_,_,_,_)),
   listaObjetosEnMapaGlobal(ObjetosMapaGlobal),
   generarObjetos(ObjetosMapaGlobal).
-
-generarObjetos([]).
-generarObjetos([[Nombre,X,Y]|ObjetosRestantes]):-
-  assert(objetoEnMapa(Nombre,X,Y)),
-  generarObjetos(ObjetosRestantes).
 
 abrirMapaGlobal:-
   definirMapaGlobal,

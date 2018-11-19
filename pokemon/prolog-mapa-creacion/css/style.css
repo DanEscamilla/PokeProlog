@@ -1,0 +1,12 @@
+.item {
+  background-color:'transparent';
+  position: relative;
+  display:inline-block;
+  border: solid black 1px;
+}
+#container{
+  margin: 16px;
+  display:block;
+  font-size:0;
+  line-height: 0;
+}

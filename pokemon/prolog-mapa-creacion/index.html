@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Prolog_tile_maker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+  </head>
+
+  <body oncontextmenu="return false;">
+    <div class="">
+      <input id="width-input" type="number" value="80"/>
+      <input id="height-input" type="number" value="30"/>
+
+      <button type="button" onclick="handleTileMapCreation()">crear</button>
+      <input id="special-name" type="text" placeholder="special-name" />
+      <input id="special-display" type="text"  placeholder="special-display" />
+      <button type="button" onclick="handleListCreation()">generar lista</button>
+
+      <div id="container"></div>
+    </div>
+    <script  src="js/index.js"></script>
+  </body>
+
+</html>
