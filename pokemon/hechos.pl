@@ -1,6 +1,5 @@
 :-dynamic
   ciudadActual/1,
-  ciudadDestino/1,
   pokehuevosEntrenador/1,
   pokemonesEntrenador/1,
   medallasEntrenador/1,

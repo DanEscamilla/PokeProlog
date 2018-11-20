@@ -6,11 +6,14 @@
   tipoTransicion/1,
   transicion/1,
   mapa/2,
+  mapaActual/1,
   objetoEnMapa/4,
   posicionJugador/2,
+  posicionAnteriorJugador/2,
   posicionVista/2.
 
 posicionJugador(1,1).
+posicionAnteriorJugador(1,1).
 
 movimiento("Derecha",1,0).
 movimiento("Izquierda",-1,0).
@@ -63,6 +66,8 @@ moverJugador(Direccion):-
   moverJugador(NuevaX,NuevaY).
 
 moverJugador(NuevaX,NuevaY):-
+  posicionJugador(X,Y),
+  cambiarHecho(posicionAnteriorJugador(_,_),posicionAnteriorJugador(X,Y)),
   cambiarHecho(posicionJugador(_,_),posicionJugador(NuevaX,NuevaY)),
   moverPosicionVista(NuevaX,NuevaY),
   mandarCollisionConObjeto(NuevaX,NuevaY),
@@ -123,20 +128,24 @@ actualizarYVista(NuevaVistaY):-
   cambiarHecho(posicionVista(_,_),posicionVista(VistaX,NuevaVistaY)).
 
 ajustarPosicionAVista(X,Y,XAjustada,YAjustada):-
-  posicionVista(VistaX,VistaY),
-  XAjustada is X + VistaX,
+  ajustarXAVista(X,XAjustada),
+  ajustarYAVista(Y,YAjustada).
+
+ajustarXAVista(X,XAjustada):-
+  posicionVista(VistaX,_),
+  XAjustada is X + VistaX.
+ajustarYAVista(Y,YAjustada):-
+  posicionVista(_,VistaY),
   YAjustada is Y + VistaY.
-
-
-
 
 
 % ------------ ImprimirMapa -------------
 
 
 imprimirMapa:-
+  mapaActual(NombreMapa),
   vista(Anchura,Altura),
-  tab(48),write("Mapa"),nl,
+  tab(44),write(NombreMapa),nl,
   imprimirLineaArriba(Anchura),
   forall(between(1,Altura,NumeroFila),imprimirFila(NumeroFila,Anchura)),nl,
   imprimirPosicion,nl.
@@ -168,7 +177,8 @@ imprimirCelda(NumeroColumna,NumeroFila):-
   ajustarPosicionAVista(NumeroColumna,NumeroFila,XEnVista,YEnVista),
   imprimirCeldaAjustada(XEnVista,YEnVista).
 
-imprimirCeldaAjustada(NumeroColumna,_):-manejarTransicion(NumeroColumna).
+imprimirCeldaAjustada(NumeroColumna,_):-
+  manejarTransicion(NumeroColumna).
 imprimirCeldaAjustada(XEnVista,YEnVista):-
   posicionJugador(XEnVista,YEnVista),
   write("Tu ").
@@ -236,21 +246,16 @@ manejarTransicion(NumeroColumna):-
 
 manejarTransicionSalida(NumeroColumna):-
   transicion(ColumnaTransicion),
-  NumeroColumna<ColumnaTransicion,
-  write("|||").
-manejarTransicionSalida(NumeroColumna):-
-  transicion(ColumnaTransicion),
-  NumeroColumna=ColumnaTransicion,
+  ajustarXAVista(ColumnaTransicion,ColumnaTransicionAjustada),
+  NumeroColumna=<ColumnaTransicionAjustada,
   write("|||").
 
 manejarTransicionEntrada(NumeroColumna):-
   transicion(ColumnaTransicion),
-  NumeroColumna>ColumnaTransicion,
+  ajustarXAVista(ColumnaTransicion,ColumnaTransicionAjustada),
+  NumeroColumna>=ColumnaTransicionAjustada,
   write("|||").
-manejarTransicionEntrada(NumeroColumna):-
-  transicion(ColumnaTransicion),
-  NumeroColumna=ColumnaTransicion,
-  write("|||").
+
 
 
 terminarTransicionSalida:-terminarTransicion.

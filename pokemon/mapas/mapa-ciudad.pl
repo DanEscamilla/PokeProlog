@@ -1,8 +1,12 @@
 posicionJugadorCiudad(2,29).
 
+
 definirMapaCiudad:-
   retractall(transicion(_)),
   cambiarHecho(mapa(_,_),mapa(80,30)),
+  ciudadActual(Ciudad),
+  string_concat('Ciudad ',Ciudad,NombreCiudad),
+  cambiarHecho(mapaActual(_),mapaActual(NombreCiudad)),
   posicionJugadorCiudad(X,Y),
   cambiarHecho(posicionJugador(_,_),posicionJugador(X,Y)),
   cambiarHecho(jugadorSeMovio,(jugadorSeMovio:-jugadorSeMovioAdaptadorCiudad)),
@@ -14,7 +18,21 @@ abrirMapaCiudad:-
   definirMapaCiudad,
   abrirMapa.
 
+jugadorSeMovioAdaptadorCiudad:-
+  posicionJugador(JugadorX,JugadorY),
+  objetoEnMapa(_,JugadorX,JugadorY,TipoObjeto),
+  validarColisionObjetoCiudad(TipoObjeto).
 jugadorSeMovioAdaptadorCiudad.
+
+validarColisionObjetoCiudad("salida"):-
+  ciudadActual("Celeste"),
+  posicionJugadorGlobal(X,_),
+  cambiarHecho(posicionJugadorGlobal(_,_),posicionJugadorGlobal(X,81)),
+  abrirMapaGlobal.
+
+validarColisionObjetoCiudad("salida"):-
+  abrirMapaGlobal.
+
 
 listaObjetosMapaCiudad([
   ["|||",3,7,"wall"],

@@ -1,17 +1,14 @@
-salida("Paleta",16,10).
-
-salida(X,Y):-
-  ciudadActual(CiudadActual),
-  salida(CiudadActual,X,Y).
-
+:-dynamic
+  posicionJugadorGlobal/2.
 
 posicionJugadorGlobal(15,10).
-posicionJugadorGlobalPasada(15,10).
 
 definirMapaGlobal:-
   retractall(transicion(_)),
   cambiarHecho(mapa(_,_),mapa(100,140)),
-  posicionJugadorGlobalPasada(JugadorX,JugadorY),
+  cambiarHecho(mapaActual(_),mapaActual('Mapa Global')),
+  posicionJugadorGlobal(JugadorX,JugadorY),
+  cambiarHecho(posicionAnteriorJugador(_,_),posicionAnteriorJugador(JugadorX,JugadorY)),
   cambiarHecho(posicionJugador(_,_),posicionJugador(JugadorX,JugadorY)),
   cambiarHecho(jugadorSeMovio,(jugadorSeMovio:-jugadorSeMovioAdaptadorGlobal)),
   retractall(objetoEnMapa(_,_,_,_)),
@@ -43,7 +40,22 @@ posibilidadCamino(RandomNum):-
 
 jugadorSeMovioAdaptadorGlobal:-
   posibilidadesCamino,
-  actualizarPokehuevo.
+  actualizarPokehuevo,
+  actualizarPosicionGlobal,
+  posicionJugador(JugadorX,JugadorY),
+  objetoEnMapa(_,JugadorX,JugadorY,TipoObjeto),
+  validarColisionObjetoGlobal(TipoObjeto).
+jugadorSeMovioAdaptadorGlobal.
+
+actualizarPosicionGlobal:-
+  posicionAnteriorJugador(X,Y),
+  cambiarHecho(posicionJugadorGlobal(_,_),posicionJugadorGlobal(X,Y)).
+
+validarColisionObjetoGlobal(Ciudad):-
+  ciudades(Ciudades),
+  member(Ciudad,Ciudades),
+  cambiarHecho(ciudadActual(_),ciudadActual(Ciudad)),
+  abrirMapaCiudad.
 
 
 listaObjetosEnMapaGlobal([

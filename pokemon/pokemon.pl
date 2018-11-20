@@ -1,6 +1,5 @@
 % TODO
 % limpiar la impresion de mensajes con shelel(clear) y esperarRespuesta
-% crear mapa ciudad.
 % unir mapa ciudad a pokemon.pl.
 % agregar tipo a ataques.
 % mostrar barras de vida (con animaciones).
@@ -23,12 +22,11 @@ jugarPokemon:-
   elegirPokemonInicial,
   enCiudad.
 
-enCiudad:-
-  elegirAccionEnCiudad.
+enCiudad:-abrirMapaCiudad.
 
-elegirAccionEnCiudad:-
-  nl,elegirOpcion("A donde deseas ir?",["Ir a hospital","Ir a gimnasio","Ir a tienda","Inspeccionar Mochila","Ir a otra ciudad"],OpcionElegida),nl,
-  posibilidadesCiudad(OpcionElegida).
+% elegirAccionEnCiudad:-
+%   nl,elegirOpcion("A donde deseas ir?",["Ir a hospital","Ir a gimnasio","Ir a tienda","Inspeccionar Mochila","Ir a otra ciudad"],OpcionElegida),nl,
+%   posibilidadesCiudad(OpcionElegida).
 
 posibilidadesCiudad("Ir a hospital"):-
   irAHospital,
@@ -47,10 +45,10 @@ posibilidadesCiudad("Ir a otra ciudad"):-
 
 irACiudad:-
   abrirMapaGlobal.
-llendoACiudad:-
-  posibilidadesCamino,
-  llegarACiudad,
-  enCiudad.
+% llendoACiudad:-
+%   posibilidadesCamino,
+%   llegarACiudad,
+%   enCiudad.
 
 
 
@@ -155,10 +153,10 @@ comprarPokebola(_):-
 % --- llegar a ciudad
 
 
-llegarACiudad:-
-  ciudadDestino(Destino),
-  cambiarHecho(ciudadActual(_),ciudadActual(Destino)),
-  write("LLegaste a "),write(Destino),write("."),nl,nl.
+% llegarACiudad:-
+%   ciudadDestino(Destino),
+%   cambiarHecho(ciudadActual(_),ciudadActual(Destino)),
+%   write("LLegaste a "),write(Destino),write("."),nl,nl.
 
 
 % --- eclosionar huevos
