@@ -1,6 +1,6 @@
 :-ensure_loaded("funciones-genericas.pl").
-:-ensure_loaded("mapa-global.pl").
-:-ensure_loaded("mapa-ciudad.pl").
+:-ensure_loaded("mapas/mapa-global.pl").
+:-ensure_loaded("mapas/mapa-ciudad.pl").
 :-dynamic
   jugadorSeMovio/0,
   tipoTransicion/1,

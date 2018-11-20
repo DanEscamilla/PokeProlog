@@ -1,7 +1,7 @@
 columns = 10;
 rows = 10;
-elementWidth = 30;
-elementHeight = 25;
+elementWidth = 20;
+elementHeight = 15;
 walls = {};
 container = $('#container');
 dragging = false;
@@ -151,6 +151,7 @@ function generatePrologList(){
     if (walls.hasOwnProperty(property)) {
 
       display = (walls[property].name == "wall")?"|||":walls[property].display;
+      display = (walls[property].display == "   ")?" * ":display;
 
        str += "[\""+
          display + "\"," +
@@ -170,6 +171,17 @@ function handleTileMapCreation(){
   rows = height;
 
   buildTileMap(rows,columns);
+}
+
+function addRows(N) {
+  newRows = rows + N;
+  container.css({
+    height:(elementHeight*(newRows))+"px"
+  })
+
+  for (let i=rows;i<newRows;i++){
+    tileMap[i] = createRow(i,columns);
+  }
 }
 
 function handleListCreation(){

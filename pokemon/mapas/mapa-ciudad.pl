@@ -1,5 +1,21 @@
 posicionJugadorCiudad(2,29).
 
+definirMapaCiudad:-
+  retractall(transicion(_)),
+  cambiarHecho(mapa(_,_),mapa(80,30)),
+  posicionJugadorCiudad(X,Y),
+  cambiarHecho(posicionJugador(_,_),posicionJugador(X,Y)),
+  cambiarHecho(jugadorSeMovio,(jugadorSeMovio:-jugadorSeMovioAdaptadorCiudad)),
+  retractall(objetoEnMapa(_,_,_,_)),
+  listaObjetosMapaCiudad(ObjetosMapaCiudad),
+  generarObjetos(ObjetosMapaCiudad).
+
+abrirMapaCiudad:-
+  definirMapaCiudad,
+  abrirMapa.
+
+jugadorSeMovioAdaptadorCiudad.
+
 listaObjetosMapaCiudad([
   ["|||",3,7,"wall"],
   ["|||",4,7,"wall"],
@@ -443,19 +459,3 @@ listaObjetosMapaCiudad([
   [" * ",80,29,"salida"],
   ["___",80,30,"salida"]
 ]).
-
-definirMapaCiudad:-
-  retractall(transicion(_)),
-  cambiarHecho(mapa(_,_),mapa(80,30)),
-  posicionJugadorCiudad(X,Y),
-  cambiarHecho(posicionJugador(_,_),posicionJugador(X,Y)),
-  cambiarHecho(jugadorSeMovio,(jugadorSeMovio:-jugadorSeMovioAdaptador)),
-  retractall(objetoEnMapa(_,_,_,_)),
-  listaObjetosMapaCiudad(ObjetosMapaCiudad),
-  generarObjetos(ObjetosMapaCiudad).
-
-abrirMapaCiudad:-
-  definirMapaCiudad,
-  abrirMapa.
-
-jugadorSeMovioAdaptador.
