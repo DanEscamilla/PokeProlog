@@ -3,15 +3,9 @@
 % unir mapa ciudad a pokemon.pl.
 % agregar tipo a ataques.
 % mostrar barras de vida (con animaciones).
+:-ensure_loaded("hechos.pl").
 :-ensure_loaded("funciones-genericas.pl").
 :-ensure_loaded("mapa.pl").
-:-ensure_loaded("hechos.pl").
-
-
-
-
-
-
 
 
 
@@ -305,6 +299,7 @@ accionEncontrarPokemon(correr,_).
 
 
 iniciarPelea:-
+  transicionSalida,
   tienesPokemonesVivos,
   elegirPokemonParaPelea,
   pelea.

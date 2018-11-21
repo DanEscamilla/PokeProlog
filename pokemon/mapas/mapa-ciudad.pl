@@ -32,6 +32,20 @@ validarColisionObjetoCiudad("salida"):-
 
 validarColisionObjetoCiudad("salida"):-
   abrirMapaGlobal.
+validarColisionObjetoCiudad("curar"):-
+  not(estabaEn("curar")),
+  irAHospital.
+validarColisionObjetoCiudad("comprar"):-
+  not(estabaEn("comprar")),
+  irATienda.
+validarColisionObjetoCiudad("lider"):-
+  not(estabaEn("lider")),
+  irAGimnasio.
+
+estabaEn(Lugar):-
+  posicionAnteriorJugador(X,Y),
+  objetoEnMapa(_,X,Y,Lugar).
+
 
 
 listaObjetosMapaCiudad([

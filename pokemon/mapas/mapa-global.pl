@@ -1,7 +1,8 @@
 :-dynamic
   posicionJugadorGlobal/2.
 
-posicionJugadorGlobal(15,10).
+% posicionJugadorGlobal(15,10).
+posicionJugadorGlobal(99,136).
 
 definirMapaGlobal:-
   retractall(transicion(_)),
@@ -57,6 +58,21 @@ validarColisionObjetoGlobal(Ciudad):-
   cambiarHecho(ciudadActual(_),ciudadActual(Ciudad)),
   abrirMapaCiudad.
 
+validarColisionObjetoGlobal("pokebolas gratis"):-
+  not(estabaEn("pokebolas gratis")),
+  pokebolasGratis.
+
+validarColisionObjetoGlobal(PokemonEspecial):-
+  pokemonesEspeciales(PokemonesEspeciales),
+  member([PokemonEspecial|Atributos],PokemonesEspeciales),
+  accionEncontrarPokemon([PokemonEspecial|Atributos]).
+
+pokebolasGratis:-
+  pokebolas(Pokebolas),
+  member([master|Atributos],Pokebolas),
+  forall(between(1,20,_),(
+    agregarPokebolaAMochila([master|Atributos])
+  )).
 
 listaObjetosEnMapaGlobal([
   ["|||",1,1,"wall"],

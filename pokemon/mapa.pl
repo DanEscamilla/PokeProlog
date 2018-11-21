@@ -50,9 +50,9 @@ moverse:-
   elegirOpcionMoverse(Opcion),
   accionOpcion(Opcion).
 
-accionOpcion("Terminar el programa"):-
-  transicionSalida,
-  abort.
+% accionOpcion("Terminar el programa"):-
+%   transicionSalida,
+%   abort.
 accionOpcion(Direccion):-
   moverJugador(Direccion),
   correr.
@@ -259,9 +259,7 @@ manejarTransicionEntrada(NumeroColumna):-
 
 
 terminarTransicionSalida:-terminarTransicion.
-terminarTransicionEntrada:-
-  terminarTransicion,
-  correr.
+terminarTransicionEntrada:-terminarTransicion.
 
 terminarTransicion:-
   shell(clear),

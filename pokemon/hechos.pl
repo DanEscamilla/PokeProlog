@@ -24,53 +24,54 @@ pokebolas([[normal,10,0.5],[super,25,0.7],[master,50,1]]).
   % nombre, tipo, vida,vidaActual, estado, experiencia, nivel, ataques, (NombrePersonalizado)
 pokemones([
 %electricidad
-  [pikachu,electricidad,120,120,excelente,0,1,["Impactrueno","Ataque Rapido","Chispa","Voltio Cruel"]],
-  [magnemite,electricidad,120,120,excelente,0,1,["Bomba sonica","Doble rayo","Trueno","Bola voltio"]],
-  [electabuzz,electricidad,120,120,excelente,0,1,["Impactrueno","Rayo","Golpe Trueno","Patada baja"]],
+  ["pikachu",electricidad,120,120,excelente,0,1,["Impactrueno","Ataque Rapido","Chispa","Voltio Cruel"]],
+  ["magnemite",electricidad,120,120,excelente,0,1,["Bomba sonica","Doble rayo","Trueno","Bola voltio"]],
+  ["electabuzz",electricidad,120,120,excelente,0,1,["Impactrueno","Rayo","Golpe Trueno","Patada baja"]],
 %planta
-  [bulbasaur,planta,120,120,excelente,0,1,["Latigo cepa","Polvo veneno","Doble filo","Hoja afilada"]],
-  [bellsprout,planta,120,120,excelente,0,1,["Somnifero","Paralizador","Atizar","Acido"]],
-  [tangela,planta,120,120,excelente,0,1,["Restriccion","Atadura","Desarme","Latigazo"]],
+  ["bulbasaur",planta,120,120,excelente,0,1,["Latigo cepa","Polvo veneno","Doble filo","Hoja afilada"]],
+  ["bellsprout",planta,120,120,excelente,0,1,["Somnifero","Paralizador","Atizar","Acido"]],
+  ["tangela",planta,120,120,excelente,0,1,["Restriccion","Atadura","Desarme","Latigazo"]],
 %fuego
-  [charmander,fuego,120,120,excelente,0,1,["Lanzallamas","Onda ignea","Llamarada","Mordisco"]],
-  [ponyta,fuego,120,120,excelente,0,1,["Nitrocarga","Derribo","Giro fuego","Llamarada"]],
-  [magmar,fuego,120,120,excelente,0,1,["Golpe fuego","Lanzallamas","Pirotecnia","Ascuas"]],
+  ["charmander",fuego,120,120,excelente,0,1,["Lanzallamas","Onda ignea","Llamarada","Mordisco"]],
+  ["ponyta",fuego,120,120,excelente,0,1,["Nitrocarga","Derribo","Giro fuego","Llamarada"]],
+  ["magmar",fuego,120,120,excelente,0,1,["Golpe fuego","Lanzallamas","Pirotecnia","Ascuas"]],
 %agura
-  [squirtle,agua,120,120,excelente,0,1,["Acua cola","Cascada","Pistola de agua","Burbuja"]],
-  [staryu,agua,120,120,excelente,0,1,["Giro rapido","Hidropulso","Pistola de agua","Rayo burbuja"]],
-  [lapras,agua,120,120,excelente,0,1,["Hidrocanon","Salpicar","Torbellino","Ventisca"]],
+  ["squirtle",agua,120,120,excelente,0,1,["Acua cola","Cascada","Pistola de agua","Burbuja"]],
+  ["staryu",agua,120,120,excelente,0,1,["Giro rapido","Hidropulso","Pistola de agua","Rayo burbuja"]],
+  ["lapras",agua,120,120,excelente,0,1,["Hidrocanon","Salpicar","Torbellino","Ventisca"]],
 %piedra
-  [geodude,piedra,120,120,excelente,0,1,["Lanzarrocas","Golpe roca","Demolucion","Pedrada"]],
-  [rhyhorn,piedra,120,120,excelente,0,1,["Megacuerno","Pataleta","Avalancha","Taladradora"]],
-  [onix,piedra,120,120,excelente,0,1,["Roca afilada","Terremoto","Avalancha","Tumbar rocas"]]
+  ["geodude",piedra,120,120,excelente,0,1,["Lanzarrocas","Golpe roca","Demolucion","Pedrada"]],
+  ["rhyhorn",piedra,120,120,excelente,0,1,["Megacuerno","Pataleta","Avalancha","Taladradora"]],
+  ["onix",piedra,120,120,excelente,0,1,["Roca afilada","Terremoto","Avalancha","Tumbar rocas"]]
 ]).
 pokemonesEspeciales([
-  [articuno,agua,1000,1000,excelente,0,1,["Rayo hielo","Ciclon","Tornado","Hiperrayo"]],
-  [zapdos,electricidad,1000,1000,excelente,0,1,["Electrocanon","Ciclon","Aire afilado","Hiperrayo"]],
-  [moltres,fuego,1000,1000,excelente,0,1,["Nitrocarga","Llamarada final","Calcinacion","Hiperrayo"]]
+  ["articuno",agua,1000,1000,excelente,0,1,["Rayo hielo","Ciclon","Tornado","Hiperrayo"]],
+  ["zapdos",electricidad,1000,1000,excelente,0,1,["Electrocanon","Ciclon","Aire afilado","Hiperrayo"]],
+  ["moltres",fuego,1000,1000,excelente,0,1,["Nitrocarga","Llamarada final","Calcinacion","Hiperrayo"]],
+  ["mewtwo",psiquico,2500,2500,excelente,0,1,["Poder1","Poder2","Poder3","Poder4"]]
 ]).
 
 %Evoluciones
+% pokemon original, evolucion, nivel requerido.
+evoluciones("pikachu","raichu",2).
+evoluciones("magnamite","magneton",2).
 
-evoluciones(pikachu,raichu,2).
-evoluciones(magnamite,magneton,2).
+evoluciones("charmander","charmeleon",2).
+evoluciones("charmeleon","charizard",3).
+evoluciones("ponyta","rapidash",2).
 
-evoluciones(charmander,charmeleon,2).
-evoluciones(charmeleon,charizard,3).
-evoluciones(ponyta,rapidash,2).
+evoluciones("squirtle","warturtle",2).
+evoluciones("warturtle","blastoise",3).
+evoluciones("staryu","starmite",2).
 
-evoluciones(squirtle,warturtle,2).
-evoluciones(warturtle,blastoise,3).
-evoluciones(staryu,starmite,2).
+evoluciones("bulbasaur","ivysaur",2).
+evoluciones("ivysaur","vinasaur",3).
+evoluciones("bellsprout","weepinbell",2).
+evoluciones("weepinbell","victreebel",3).
 
-evoluciones(bulbasaur,ivysaur,2).
-evoluciones(ivysaur,vinasaur,3).
-evoluciones(bellsprout,weepinbell,2).
-evoluciones(weepinbell,victreebel,3).
-
-evoluciones(geodude,graveler,2).
-evoluciones(graveler,golem,3).
-evoluciones(rhyhorn,rhydon,2).
+evoluciones("geodude","graveler",2).
+evoluciones("graveler","golem",3).
+evoluciones("rhyhorn","rhydon",2).
 
 %Debilidades
 
@@ -112,7 +113,7 @@ definirPoderDeAtaque(Habilidades):-
     assert(habilidad(Habilidad,RandomMin,Max))
   )).
   % cambiarHecho(habilidad(impactrueno,1000,1000),habilidad(impactrueno,_,_)).
-pokemonesIniciales([pikachu,bulbasaur,charmander,squirtle]).
+pokemonesIniciales(["pikachu","bulbasaur","charmander","squirtle"]).
 
 % CIUDADES
 ciudades(["Paleta","Verde","Plateada","Celeste","Carmin","Azulona"]).
