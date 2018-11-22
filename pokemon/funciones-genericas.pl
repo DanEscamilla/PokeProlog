@@ -26,24 +26,15 @@ elementoRandomLista(Lista,Elemento):-
 elegirOpcion(Mensaje,Opciones,ElementoElegido):-
   write(Mensaje),nl,nl,
   desplegarOpciones(Opciones),
-  leer(IndiceOpcion),nl,
-  nth0(IndiceOpcion,Opciones,ElementoElegido).
-elegirOpcion(Mensaje,Opciones,ElementoElegido):-
-  write("Opcion invalida"),nl,nl,
-  elegirOpcion(Mensaje,Opciones,ElementoElegido).
-
+  leerOpcion(Opciones,ElementoElegido),nl.
 % sin mensaje
 elegirOpcion(Opciones,ElementoElegido):-
-  leer(IndiceOpcion),nl,
-  nth0(IndiceOpcion,Opciones,ElementoElegido).
-elegirOpcion(Opciones,ElementoElegido):-
-  write("Opcion invalida, vuelve a introducir una opcion."),nl,
-  elegirOpcion(Opciones,ElementoElegido).
+  leerOpcion(Opciones,ElementoElegido),nl.
 
 elegirOpcionSinValidar(Mensaje,Opciones,ElementoElegido):-
   write(Mensaje),nl,
   desplegarOpciones(Opciones),
-  leer(IndiceOpcion),nl,
+  leerOpcion(IndiceOpcion),nl,
   nth0(IndiceOpcion,Opciones,ElementoElegido).
 
 
@@ -79,5 +70,18 @@ esperarRespuestaValidada:-esperarRespuestaValidada.
 leer(Entrada):-
   catch(read(Entrada), _ , false),
   tieneValor(Entrada).
+
+leerOpcion(IndiceOpcion):-
+  catch((
+    get_single_char(X),
+    char_code(Str,X),
+    atom_number(Str,IndiceOpcion)
+  ), _ , false),
+  tieneValor(IndiceOpcion).
+
+leerOpcion(Opciones,ElementoElegido):-
+  leerOpcion(IndiceOpcion),
+  nth0(IndiceOpcion,Opciones,ElementoElegido).
+leerOpcion(Opciones,Entrada):-leerOpcion(Opciones,Entrada).
 
 tieneValor(X):-not(var(X)).

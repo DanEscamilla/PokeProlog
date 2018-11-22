@@ -2,7 +2,7 @@
   posicionJugadorGlobal/2.
 
 % posicionJugadorGlobal(15,10).
-posicionJugadorGlobal(99,136).
+posicionJugadorGlobal(25,132).
 
 definirMapaGlobal:-
   retractall(transicion(_)),
@@ -25,9 +25,9 @@ posibilidadesCamino:-
   random(RandomNum).
   % posibilidadCamino(RandomNum).
 
-posibilidadCamino(RandomNum):-RandomNum<0.9. % 90% que no pase nada
+posibilidadCamino(RandomNum):-RandomNum< 0.9 . % 90% que no pase nada
 posibilidadCamino(RandomNum):-
-  RandomNum<0.91, %  10% de probabilidad de que el encuentro sea un pokehuevo
+  RandomNum< 0.91 , %  10% de probabilidad de que el encuentro sea un pokehuevo
   encontrarPokehuevo.
 posibilidadCamino(RandomNum):-
   RandomNum<0.92, %  10% de probabilidad de que el encuentro sea una pokebola
@@ -37,16 +37,18 @@ posibilidadCamino(RandomNum):-
   encontrarPokemon.
 posibilidadCamino(RandomNum):-
   RandomNum=<1, %  20% de probabilidad de que el encuentro sea un entrenador
+  transicionSalida,
   encontrarEntrenador.
 
 jugadorSeMovioAdaptadorGlobal:-
-  posibilidadesCamino,
+  (checarSiHayCollision;posibilidadesCamino),
   actualizarPokehuevo,
-  actualizarPosicionGlobal,
+  actualizarPosicionGlobal.
+
+checarSiHayCollision:-
   posicionJugador(JugadorX,JugadorY),
   objetoEnMapa(_,JugadorX,JugadorY,TipoObjeto),
   validarColisionObjetoGlobal(TipoObjeto).
-jugadorSeMovioAdaptadorGlobal.
 
 actualizarPosicionGlobal:-
   posicionAnteriorJugador(X,Y),
@@ -62,10 +64,12 @@ validarColisionObjetoGlobal("pokebolas gratis"):-
   not(estabaEn("pokebolas gratis")),
   pokebolasGratis.
 
-validarColisionObjetoGlobal(PokemonEspecial):-
+validarColisionObjetoGlobal(NombrePokemonEspecial):-
+  posicionAnteriorJugador(X,Y),
+  cambiarHecho(posicionJugador(_,_),posicionJugador(X,Y)),
   pokemonesEspeciales(PokemonesEspeciales),
-  member([PokemonEspecial|Atributos],PokemonesEspeciales),
-  accionEncontrarPokemon([PokemonEspecial|Atributos]).
+  member([NombrePokemonEspecial|Atributos],PokemonesEspeciales),
+  encontrarPokemon([NombrePokemonEspecial|Atributos]).
 
 pokebolasGratis:-
   pokebolas(Pokebolas),
@@ -1792,7 +1796,7 @@ listaObjetosEnMapaGlobal([
   ["|||",54,42,"wall"],
   ["|||",51,45,"wall"],
   [" * ",43,53,"mewtwo"],
-  ["mew",39,57,""],
+  ["Mew",39,57,"mewtwo"],
   [" * ",36,60,"mewtwo"],
   ["|||",27,69,"wall"],
   ["|||",26,70,"wall"],
@@ -1831,7 +1835,7 @@ listaObjetosEnMapaGlobal([
   ["|||",56,41,"wall"],
   ["|||",54,43,"wall"],
   [" * ",43,54,"mewtwo"],
-  ["two",40,57,""],
+  ["two",40,57,"mewtwo"],
   [" * ",36,61,"mewtwo"],
   ["|||",28,69,"wall"],
   ["|||",27,70,"wall"],
@@ -2583,7 +2587,7 @@ listaObjetosEnMapaGlobal([
   ["|||",29,88,"wall"],
   ["|||",19,98,"wall"],
   [" * ",4,113,"zapdos"],
-  ["zap",2,115,""],
+  ["Zap",2,115,"zapdos"],
   ["|||",100,18,"wall"],
   ["|||",99,19,"wall"],
   ["|||",98,20,"wall"],
@@ -2619,7 +2623,7 @@ listaObjetosEnMapaGlobal([
   ["|||",30,88,"wall"],
   ["|||",20,98,"wall"],
   [" * ",5,113,"zapdos"],
-  ["dos",3,115,""],
+  ["dos",3,115,"zapdos"],
   [" * ",1,117,"zapdos"],
   ["|||",100,19,"wall"],
   ["|||",99,20,"wall"],
@@ -3727,7 +3731,7 @@ listaObjetosEnMapaGlobal([
   ["|||",43,97,"wall"],
   ["|||",29,111,"wall"],
   [" * ",4,136,"moltres"],
-  ["mol",2,138,""],
+  ["Mol",2,138,"moltres"],
   ["|||",100,41,"wall"],
   ["|||",99,42,"pared falsa"],
   ["|||",98,43,"wall"],
@@ -3778,8 +3782,7 @@ listaObjetosEnMapaGlobal([
   ["|||",45,96,"wall"],
   ["|||",29,112,"wall"],
   [" * ",5,136,"moltres"],
-  ["tre",3,138,""],
-  [" * ",1,140,"motres"],
+  ["tre",3,138,"moltres"],
   ["|||",100,42,"wall"],
   [" * ",99,43,"pokebolas gratis"],
   ["pok",98,44,""],
@@ -3828,8 +3831,7 @@ listaObjetosEnMapaGlobal([
   ["|||",45,97,"wall"],
   ["|||",29,113,"wall"],
   [" * ",6,136,"moltres"],
-  ["s  ",4,138,""],
-  [" * ",2,140,"motres"],
+  ["s  ",4,138,"moltres"],
   ["|||",100,43,"wall"],
   ["ebo",99,44,""],
   ["|||",98,45,"wall"],
@@ -3878,7 +3880,6 @@ listaObjetosEnMapaGlobal([
   ["|||",46,97,"wall"],
   ["|||",29,114,"wall"],
   [" * ",6,137,"moltres"],
-  [" * ",3,140,"motres"],
   ["las",100,44,""],
   ["|||",99,45,"wall"],
   ["|||",98,46,"wall"],
@@ -3926,7 +3927,6 @@ listaObjetosEnMapaGlobal([
   ["|||",46,98,"wall"],
   ["|||",29,115,"wall"],
   [" * ",6,138,"moltres"],
-  [" * ",4,140,"motres"],
   ["|||",100,45,"wall"],
   ["|||",99,46,"wall"],
   ["|||",98,47,"pared falsa"],
@@ -3972,7 +3972,6 @@ listaObjetosEnMapaGlobal([
   ["|||",46,99,"wall"],
   ["|||",29,116,"wall"],
   [" * ",6,139,"moltres"],
-  [" * ",5,140,"motres"],
   ["|||",100,46,"wall"],
   ["|||",99,47,"wall"],
   ["|||",98,48,"pared falsa"],
@@ -4012,7 +4011,6 @@ listaObjetosEnMapaGlobal([
   ["|||",49,97,"wall"],
   ["|||",48,98,"wall"],
   ["|||",29,117,"wall"],
-  [" * ",6,140,"moltres"],
   ["|||",100,47,"wall"],
   ["|||",99,48,"wall"],
   ["|||",98,49,"pared falsa"],
@@ -5091,9 +5089,8 @@ listaObjetosEnMapaGlobal([
   [" * ",98,137,"articuno"],
   [" * ",96,139,"articuno"],
   [" * ",99,137,"articuno"],
-  [" * ",96,140,"articuno"],
   [" * ",100,137,"articuno"],
-  ["Art",98,139,""],
-  ["icu",99,139,""],
-  ["no ",100,139,""]
+  ["Art",98,139,"articuno"],
+  ["icu",99,139,"articuno"],
+  ["no ",100,139,"articuno"]
 ]).

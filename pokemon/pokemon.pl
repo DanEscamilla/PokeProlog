@@ -72,7 +72,7 @@ imprimirLiderDeGimnasio:-
   mostrarPokemonesEnemigos(Pokemones),nl.
 
 accionEntrarGimasio:-
-  elegirOpcion("Deseas deseas retar al lider de gimnasio?",[retar,salir],OpcionElegida),
+  elegirOpcion("Deseas deseas retar al lider de gimnasio?",[salir,retar],OpcionElegida),
   accionEntrarGimasio(OpcionElegida).
 accionEntrarGimasio:-accionEntrarGimasio.
 
@@ -176,6 +176,7 @@ sumarDistanciaAPokehuevo(Pokehuevo,_):-
   random_permutation(PokemonesDeTipoCompatible,[PokemonEclosionado|_]),
   sacarPokehuevoDeMochila(Pokehuevo),
   obtenerNombre(PokemonEclosionado,NombrePokemon),
+  shell(clear),
   nl,write("Un pokehuevo de "),write(Tipo),write(" eclosiono a un "),write(NombrePokemon),nl,
   agregarPokemonAMochila(PokemonEclosionado),
   esperarRespuesta1Enter.
@@ -230,7 +231,7 @@ imprimirEntrenadorActivo:-
 dineroRandom(Dinero):-random(60,120,Dinero).
 
 accionEncontrarEntrenador:-
-  elegirOpcion("Deseas aceptar el duelo o rechazarlo?",[aceptar,rechazar],OpcionElegida),
+  elegirOpcion("Deseas aceptar el duelo o rechazarlo?",[rechazar,aceptar],OpcionElegida),
   accionEncontrarEntrenador(OpcionElegida).
 accionEncontrarEntrenador:-accionEncontrarEntrenador.
 
@@ -270,8 +271,12 @@ obtenerDinero(Dinero):-
 encontrarPokemon:-
   cambiarHecho(peleandoCon(_),peleandoCon(pokemonSalvaje)),
   pokemonRandom(Pokemon),
+  encontrarPokemon(Pokemon).
+encontrarPokemon(Pokemon):-
+  transicionSalida,
   Pokemon = [Nombre|_],
   nl,write("Encontraste un "),write(Nombre),write(" salvaje!"),nl,
+  mostrarPokemonEnemigo(Pokemon),nl,
   accionEncontrarPokemon(Pokemon).
 
 pokemonRandom(Pokemon):-
@@ -284,7 +289,7 @@ pokemonRandom(Pokemon):-
   elementoRandomLista(Pokemones,Pokemon).
 
 accionEncontrarPokemon(Pokemon):-
-  elegirOpcion("Deseas pelear o correr?",[pelear,correr],OpcionElegida),
+  elegirOpcion("Deseas pelear o correr?",[correr,pelear],OpcionElegida),
   accionEncontrarPokemon(OpcionElegida,Pokemon).
 accionEncontrarPokemon(Pokemon):-accionEncontrarPokemon(Pokemon).
 
@@ -299,7 +304,6 @@ accionEncontrarPokemon(correr,_).
 
 
 iniciarPelea:-
-  transicionSalida,
   tienesPokemonesVivos,
   elegirPokemonParaPelea,
   pelea.
@@ -508,7 +512,7 @@ capturarPokemon:-
   % remplazarIndice(5,excelente,PokemonVencido,PokemonVencido2), % debug
   obtenerNombre(PokemonVencido,TipoPokemon),
   write("Deseas Capturar al "),write(TipoPokemon),write("?"),
-  elegirOpcion("",[si,no],Opcion),
+  elegirOpcion("",[no,si],Opcion),
   accionCapturarPokemon(Opcion,PokemonVencido).
 
 accionCapturarPokemon(si,Pokemon):-
@@ -527,7 +531,7 @@ intentarCapturar(Pokebola,Pokemon):-
   agregarPokemonAMochila(Pokemon).
 intentarCapturar(Pokebola,[NombrePokemon|_]):-
   sacarPokebolaMochila(Pokebola),
-  write("El "),write(NombrePokemon),write(" escapo! mejor suerte la proxima"),nl.
+  write("El "),write(NombrePokemon),write(" escapo! mejor suerte la proxima"),nl,nl.
 
 sacarPokebolaMochila(Pokebola):-
   pokebolasEntrenador(Pokebolas),
@@ -537,9 +541,10 @@ sacarPokebolaMochila(Pokebola):-
 % --- Encuentra pokehuevo random y agrega a mochila
 
 encontrarPokehuevo:-
+  shell(clear),
   pokehuevoRandom(Pokehuevo),
   Pokehuevo = [Nombre|_],
-  nl,write("Encontraste un nuevo pokehuevo de "),write(Nombre),write("!"),nl,
+  nl,write("Encontraste un nuevo pokehuevo de "),write(Nombre),write("!"),nl,nl,
   agregarPokehuevoAMochila(Pokehuevo).
 
 pokehuevoRandom(Pokehuevo):-
@@ -550,6 +555,7 @@ pokehuevoRandom(Pokehuevo):-
 % --- Encuentra pokebola random y agrega a mochila
 
 encontrarPokebola:-
+  shell(clear),
   pokerbolaRandom(Pokebola),
   Pokebola = [Nombre|_],
   nl,write("Encontraste una pokebola "),write(Nombre),write("!"),nl,
@@ -702,7 +708,7 @@ mostrarCiudades(IndiceInicial,Destinos):-
 
 elegirTuPokemon(Pokemon):-
   mostrarPokemonesEntrenador,
-  leer(Eleccion),nl,
+  leerOpcion(Eleccion),nl,
   pokemonesEntrenador(Pokemones),
   nth0(Eleccion,Pokemones,Pokemon).
 elegirTuPokemon(Pokemon):-
@@ -767,8 +773,8 @@ agregarPokemonAMochila(Pokehuevo):-accionNoEspacioParaPokemon(Pokehuevo).
 
 % Mochila llena, decidir accion para pokehuevo
 accionNoEspacioParaPokemon(Pokehuevo):-
-  mostrarOpcionesMochilaLLena("No hay espacio en mochila, Que deseas hacer con el pokemon?"),
-  leer(Eleccion),nl,
+  mostrarOpcionesMochilaLLena("No hay espacio en mochila, Que deseas hacer con el pokemon?",Opciones),
+  leerOpcion(Opciones,Eleccion),nl,
   decisionPokemon(Eleccion,Pokehuevo).
 accionNoEspacioParaPokemon(Pokehuevo):-accionNoEspacioParaPokemon(Pokehuevo).
 
@@ -795,10 +801,16 @@ agregarPokehuevoAMochila(Pokehuevo):-accionNoEspacioParaPokehuevo(Pokehuevo).
 % --- Mochila llena, decidir accion para pokehuevo
 
 accionNoEspacioParaPokehuevo(Pokehuevo):-
-  mostrarOpcionesMochilaLLena("No hay espacio en mochila, Que deseas hacer con el pokehuevo?"),
-  leer(Eleccion),nl,
+  mostrarOpcionesMochilaLLena("No hay espacio en mochila, Que deseas hacer con el pokehuevo?",Opciones),
+  leerOpcionesMochilaLLena(Opciones,Eleccion),nl,
   decisionPokehuevo(Eleccion,Pokehuevo).
 accionNoEspacioParaPokehuevo(Pokehuevo):-accionNoEspacioParaPokehuevo(Pokehuevo).
+
+leerOpcionesMochilaLLena(Opciones,Eleccion):-
+  leerOpcion(Eleccion),
+  member(Eleccion,Opciones).
+leerOpcionesMochilaLLena(Opciones,Eleccion):-leerOpcionesMochilaLLena(Opciones,Eleccion).
+
 
 % posibles acciones
 decisionPokehuevo(0,_). %dejarlo
@@ -811,19 +823,23 @@ decisionPokehuevo(2,Pokehuevo):-
 
 % -- Muestra opciones dependiendo del estado de la mochila
 
-mostrarOpcionesMochilaLLena(Mensaje):-
+mostrarOpcionesMochilaLLena(Mensaje,Opciones):-
   write(Mensaje),nl,
   write("0-dejarlo"),nl,
-  (mostrarOpcionMandarPokemonABill;true),
-  (mostrarOpcionMandarPokehuevoABill;true).
+  mostrarOpcionMandarPokemonABill([0],L1),
+  mostrarOpcionMandarPokehuevoABill(L1,Opciones).
 
-mostrarOpcionMandarPokemonABill:- % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
+mostrarOpcionMandarPokemonABill(L1,L2):- % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
   pokemonesEntrenador([_,_|_]),
-  write("1-Mandar pokemon a bill"),nl.
+  write("1-Mandar pokemon a bill"),
+  append(L1,[1],L2),nl.
+mostrarOpcionMandarPokemonABill(L1,L1). % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
 
-mostrarOpcionMandarPokehuevoABill:- % esta opcion solo se muestra si hay al menos 1 pokehuevo en mochila
+mostrarOpcionMandarPokehuevoABill(L1,L2):- % esta opcion solo se muestra si hay al menos 1 pokehuevo en mochila
   pokehuevosEntrenador([_|_]),
-  write("2-Mandar pokehuevo a bill"),nl.
+  write("2-Mandar pokehuevo a bill"),
+  append(L1,[2],L2),nl.
+mostrarOpcionMandarPokehuevoABill(L1,L1). % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
 
 
 % -- Verifica si hay menos de 6 pokemones/huevos en la mochila
@@ -850,7 +866,7 @@ mandarPokemonABill(Pokemon):-
   cambiarHecho(pokemonesBill(_),pokemonesBill([Pokemon|PokemonesBill])),
   cambiarHecho(pokemonesEntrenador(_),pokemonesEntrenador(PokemonesRestantes)),
   nombreMiPokemon(Pokemon,NombreDado),
-  write("Mandaste a un "),write(NombreDado),write(" con bill!"),nl.
+  write("Mandaste a "),write(NombreDado),write(" con bill!"),nl.
 
 % --- mandar pokehuevo a bill
 
@@ -949,8 +965,6 @@ actualizarPokehuevo(Pokehuevo,PokehuevoActualizado):-
 sacarPokehuevoDeMochila(Pokehuevo):-
   pokehuevosEntrenador(Pokehuevos),
   nth0(_,Pokehuevos,Pokehuevo,PokehuevosActualizados),
-  write("POKEHUEVOS ORIGINALES "), write(Pokehuevos),nl,
-  write("POKEHUEVOS Actualizados "), write(PokehuevosActualizados),nl,
   cambiarHecho(pokehuevosEntrenador(_),pokehuevosEntrenador(PokehuevosActualizados)).
 
 

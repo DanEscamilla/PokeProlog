@@ -97,7 +97,9 @@ debilidades(_,_,1).
 
 definirPoderesDeAtaque:-
   retractall(habilidad(_,_)),
-  pokemones(Pokemones),
+  pokemonesEspeciales(PokemonesEspeciales),
+  pokemones(PokemonesNormales),
+  append(PokemonesNormales,PokemonesEspeciales,Pokemones),
   forall(
   (
     member(Pokemon,Pokemones),

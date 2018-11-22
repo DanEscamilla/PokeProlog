@@ -228,8 +228,8 @@ transicionando:-
   forall(between(1,AnchuraMitad,NumeroColumna),
   (
     NumeroColumnaMultiplicada is NumeroColumna * 2,
-    shell(clear),nl,
-    imprimirMapa,
+    shell(clear),
+    nl,imprimirMapa,
     sleep(0.05),
     cambiarHecho(transicion(_),transicion(NumeroColumnaMultiplicada))
   )).
