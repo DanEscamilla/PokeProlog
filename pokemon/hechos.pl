@@ -24,7 +24,7 @@ pokebolas([[normal,10,0.5],[super,25,0.7],[master,50,1]]).
   % nombre, tipo, vida,vidaActual, estado, experiencia, nivel, ataques, (NombrePersonalizado)
 pokemones([
 %electricidad
-  ["pikachu",electricidad,120,120,excelente,0,1,["Impactrueno","Ataque Rapido","Chispa","Voltio Cruel"]],
+  ["pikachu",electricidad,120,120,excelente,0,1,["Impactrueno","Ataque Rapido","Chispa","Voltio cruel"]],
   ["magnemite",electricidad,120,120,excelente,0,1,["Bomba sonica","Doble rayo","Trueno","Bola voltio"]],
   ["electabuzz",electricidad,120,120,excelente,0,1,["Impactrueno","Rayo","Golpe Trueno","Patada baja"]],
 %planta
@@ -36,7 +36,7 @@ pokemones([
   ["ponyta",fuego,120,120,excelente,0,1,["Nitrocarga","Derribo","Giro fuego","Llamarada"]],
   ["magmar",fuego,120,120,excelente,0,1,["Golpe fuego","Lanzallamas","Pirotecnia","Ascuas"]],
 %agura
-  ["squirtle",agua,120,120,excelente,0,1,["Acua cola","Cascada","Pistola de agua","Burbuja"]],
+  ["squirtle",agua,120,120,excelente,0,1,["Coletazo","Cascada","Pistola de agua","Burbuja"]],
   ["staryu",agua,120,120,excelente,0,1,["Giro rapido","Hidropulso","Pistola de agua","Rayo burbuja"]],
   ["lapras",agua,120,120,excelente,0,1,["Hidrocanon","Salpicar","Torbellino","Ventisca"]],
 %piedra
@@ -50,6 +50,13 @@ pokemonesEspeciales([
   ["moltres",fuego,1000,1000,excelente,0,1,["Nitrocarga","Llamarada final","Calcinacion","Hiperrayo"]],
   ["mewtwo",psiquico,2500,2500,excelente,0,1,["Poder1","Poder2","Poder3","Poder4"]]
 ]).
+
+% relacion entre ataques y que tipo son.
+tipoAtaques(piedra,["Lanzarrocas","Golpe roca","Pedrada","Avalancha","Taladradora","Roca afilada","Terremoto","Avalancha","Tumbar rocas"])
+tipoAtaques(agua,["Cascada","Pistola de agua","Burbuja","Hidropulso","Pistola de agua","Rayo burbuja","Hidrocanon","Salpicar","Ventisca","Rayo hielo","Ciclon"])
+tipoAtaques(fuego,["Llamarada final","Calcinacion","Lanzallamas","Onda ignea","Llamarada","Nitrocarga","Giro fuego","Golpe fuego","Pirotecnia"]).
+tipoAtaques(planta,["Latigo cepa","Polvo veneno","Somnifero","Paralizador","Acido","Latigazo"]).
+tipoAtaques(electricidad,["Electrocanon","Impactrueno","Chispa","Voltio cruel","Trueno","Bola voltio","Doble rayo","Rayo","Golpe Trueno"]).
 
 %Evoluciones
 % pokemon original, evolucion, nivel requerido.
