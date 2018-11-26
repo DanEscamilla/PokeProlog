@@ -41,6 +41,9 @@ validarColisionObjetoCiudad("comprar"):-
 validarColisionObjetoCiudad("lider"):-
   not(estabaEn("lider")),
   irAGimnasio.
+validarColisionObjetoCiudad("mandar"):-
+  not(estabaEn("mandar")),
+  retirarDeBill.
 
 estabaEn(Lugar):-
   posicionAnteriorJugador(X,Y),

@@ -26,7 +26,7 @@ elementoRandomLista(Lista,Elemento):-
 elegirOpcion(Mensaje,Opciones,ElementoElegido):-
   write(Mensaje),nl,nl,
   desplegarOpciones(Opciones),
-  leerOpcion(Opciones,ElementoElegido),nl.
+  leerOpcion(Opciones,ElementoElegido).
 % sin mensaje
 elegirOpcion(Opciones,ElementoElegido):-
   leerOpcion(Opciones,ElementoElegido),nl.
@@ -34,7 +34,7 @@ elegirOpcion(Opciones,ElementoElegido):-
 elegirOpcionSinValidar(Mensaje,Opciones,ElementoElegido):-
   write(Mensaje),nl,
   desplegarOpciones(Opciones),
-  leerOpcion(IndiceOpcion),nl,
+  leerOpcion(IndiceOpcion),
   nth0(IndiceOpcion,Opciones,ElementoElegido).
 
 

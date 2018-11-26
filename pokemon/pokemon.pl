@@ -1,8 +1,8 @@
 % TODO
-% limpiar la impresion de mensajes con shelel(clear) y esperarRespuesta
-% unir mapa ciudad a pokemon.pl.
-% agregar tipo a ataques.
+% agregar cambiar pokemones de con bill.
+% limpiar la impresion de mensajes con shell(clear) y esperarRespuesta
 % mostrar barras de vida (con animaciones).
+% agregar tipo a ataques.
 :-ensure_loaded("hechos.pl").
 :-ensure_loaded("funciones-genericas.pl").
 :-ensure_loaded("mapa.pl").
@@ -52,6 +52,45 @@ irACiudad:-
 
 %-------------------ESPECIFICAS POKEMON-------------------
 
+retirarDeBill:-
+  shell(clear),
+  opcionesBill(Opciones),
+  elegirOpcion("Que quieres retirar?",Opciones,Opcion),
+  accionEligirRetiro(Opcion).
+
+accionEligirRetiro("Salir").
+accionEligirRetiro("Pokemon"):-
+  elegirPokemonBill("Que pokemon quieres pedirle a Bill?",Pokemon),
+  quitarPokemonBill(Pokemon),
+  agregarPokemonNombradoAMochila(Pokemon).
+accionEligirRetiro("Pokehuevo"):-
+  pokehuevosBill(Pokehuevos),
+  elegirOpcion("Que pokehuevo quieres pedirle a Bill? ",Pokehuevos,Pokehuevo),
+  quitarPokehuevoBill(Pokehuevo),
+  agregarPokehuevoAMochila(Pokehuevo).
+
+opcionesBill(Opciones):-
+  mostrarOpcionRetirarPokemon(["Salir"],L1),
+  mostrarOpcionRetirarPokehuevo(L1,Opciones).
+
+mostrarOpcionRetirarPokemon(L1,L2):- % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
+  pokemonesBill([_|_]),
+  append(L1,["Pokemon"],L2),nl.
+mostrarOpcionRetirarPokemon(L1,L1). % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
+
+mostrarOpcionRetirarPokehuevo(L1,L2):- % esta opcion solo se muestra si hay al menos 1 pokehuevo en mochila
+  pokehuevosBill([_|_]),
+  append(L1,["Pokehuevo"],L2),nl.
+mostrarOpcionRetirarPokehuevo(L1,L1). % esta opcion solo se muestra si hay mas de 1 un pokemon en mochila
+
+quitarPokemonBill(Pokemon):-
+  pokemonesBill(Pokemones),
+  nth0(_,Pokemones,Pokemon,PokemonesRestantes),
+  cambiarHecho(pokemonesBill(_),pokemonesBill(PokemonesRestantes)).
+quitarPokehuevoBill(Pokehuevo):-
+  pokehuevosBill(Pokehuevos),
+  nth0(_,Pokehuevos,Pokehuevo,PokehuevosRestantes),
+  cambiarHecho(pokehuevosBill(_),pokehuevosBill(PokehuevosRestantes)).
 
 
 % --- gimnasio
@@ -310,8 +349,8 @@ iniciarPelea:-
 iniciarPelea:-perdisteElJuego.
 
 elegirPokemonParaPelea:-
-  nl,write("Que pokemon vas a utilizar para la pelea?"),nl,nl,
-  elegirTuPokemon(Pokemon),
+  shell(clear),
+  elegirTuPokemon("Que pokemon vas a utilizar para la pelea?",Pokemon),
   establezerPokemonParaPelea(Pokemon).
 
 establezerPokemonParaPelea(Pokemon):-
@@ -322,6 +361,7 @@ establezerPokemonParaPelea(Pokemon):-
 establezerPokemonParaPelea(Pokemon):-
   nombreMiPokemon(Pokemon,Nombre),
   write(Nombre),write(" esta caido, para poder utilizarlo debes revivirlo en el hospital pokemon."),nl,nl,
+  esperarRespuesta1Enter,
   elegirPokemonParaPelea.
 
 tienesPokemonesVivos:-
@@ -706,19 +746,32 @@ mostrarCiudades(IndiceInicial,Destinos):-
 
 % --- Similar a elegirOpcion, pero muestra el nombre del pokemon antes de la lista
 
-elegirTuPokemon(Pokemon):-
-  mostrarPokemonesEntrenador,
-  leerOpcion(Eleccion),nl,
+elegirTuPokemon(Mensaje,Pokemon):-
   pokemonesEntrenador(Pokemones),
-  nth0(Eleccion,Pokemones,Pokemon).
-elegirTuPokemon(Pokemon):-
-  write("Opcion invalida"),nl,nl,
-  elegirTuPokemon(Pokemon).
+  elegirPokemon(Mensaje,Pokemones,Pokemon).
+elegirPokemonBill(Mensaje,Pokemon):-
+  pokemonesBill(Pokemones),
+  elegirPokemon(Mensaje,Pokemones,Pokemon).
 
-% -- Imprime Lista de pokemones del jugador enumerada por renglon y con el nombre que se le dio al pokemon
+elegirPokemon(Mensaje,Pokemones,Pokemon):-
+  shell(clear),
+  nl,write(Mensaje),nl,nl,
+  mostrarPokemones(Pokemones),
+  leerOpcion(Eleccion),nl,
+  nth0(Eleccion,Pokemones,Pokemon).
+elegirPokemon(Mensaje,Pokemones,Pokemon):-
+  write("Opcion invalida"),nl,nl,
+  esperarRespuesta1Enter,
+  elegirPokemon(Mensaje,Pokemones,Pokemon).
 
 mostrarPokemonesEntrenador:-
   pokemonesEntrenador(Pokemones),
+  mostrarPokemones(Pokemones).
+
+
+% -- Imprime Lista de pokemones del jugador enumerada por renglon y con el nombre que se le dio al pokemon
+
+mostrarPokemones(Pokemones):-
   forall(nth0(Indice,Pokemones,Pokemon),
   (
     Pokemon = [Nombre,Tipo,VidaMax,VidaActual,Estado,Experiencia,Nivel,Ataques,NombreDado],
@@ -770,6 +823,16 @@ agregarPokemonAMochila(Pokemon):-
   cambiarHecho(pokemonesEntrenador(_),pokemonesEntrenador(NuevosPokemones)),
   checarSiCapturasteATodos.
 agregarPokemonAMochila(Pokehuevo):-accionNoEspacioParaPokemon(Pokehuevo).
+
+agregarPokemonNombradoAMochila(PokemonNombrado):-
+  hayEspacioEnMochila,
+  pokemonesEntrenador(Pokemones),
+  append(Pokemones,[PokemonNombrado],NuevosPokemones),
+  cambiarHecho(pokemonesEntrenador(_),pokemonesEntrenador(NuevosPokemones)),
+  nombreMiPokemon(PokemonNombrado,Nombre),
+  nl,write(Nombre),write(" fue agregado a tu mochila."),nl,nl,
+  esperarRespuesta1Enter.
+agregarPokemonNombradoAMochila(PokemonNombrado):-agregarPokemonNombradoAMochila(PokemonNombrado).
 
 % Mochila llena, decidir accion para pokehuevo
 accionNoEspacioParaPokemon(Pokehuevo):-
@@ -855,8 +918,7 @@ hayEspacioEnMochila:-
 % --- mandar pokemon a bill
 
 mandarPokemonABill:-
-  write("Que pokemon vas a mandar a bill?"),nl,
-  elegirTuPokemon(Pokemon),
+  elegirTuPokemon("Que pokemon vas a mandar a bill?",Pokemon),
   mandarPokemonABill(Pokemon).
 
 mandarPokemonABill(Pokemon):-

@@ -52,8 +52,8 @@ pokemonesEspeciales([
 ]).
 
 % relacion entre ataques y que tipo son.
-tipoAtaques(piedra,["Lanzarrocas","Golpe roca","Pedrada","Avalancha","Taladradora","Roca afilada","Terremoto","Avalancha","Tumbar rocas"])
-tipoAtaques(agua,["Cascada","Pistola de agua","Burbuja","Hidropulso","Pistola de agua","Rayo burbuja","Hidrocanon","Salpicar","Ventisca","Rayo hielo","Ciclon"])
+tipoAtaques(piedra,["Lanzarrocas","Golpe roca","Pedrada","Avalancha","Taladradora","Roca afilada","Terremoto","Avalancha","Tumbar rocas"]).
+tipoAtaques(agua,["Cascada","Pistola de agua","Burbuja","Hidropulso","Pistola de agua","Rayo burbuja","Hidrocanon","Salpicar","Ventisca","Rayo hielo","Ciclon"]).
 tipoAtaques(fuego,["Llamarada final","Calcinacion","Lanzallamas","Onda ignea","Llamarada","Nitrocarga","Giro fuego","Golpe fuego","Pirotecnia"]).
 tipoAtaques(planta,["Latigo cepa","Polvo veneno","Somnifero","Paralizador","Acido","Latigazo"]).
 tipoAtaques(electricidad,["Electrocanon","Impactrueno","Chispa","Voltio cruel","Trueno","Bola voltio","Doble rayo","Rayo","Golpe Trueno"]).
@@ -174,8 +174,8 @@ medallasEntrenador([]).
 % --- ESTADO BILL
 
 
-pokemonesBill([]).
-pokehuevosBill([]).
+pokemonesBill([["charmander",fuego,120,120,excelente,0,1,["Lanzallamas","Onda ignea","Llamarada","Mordisco"],"pene"]]).
+pokehuevosBill([[fuego,160],[agua,140],[piedra,120]]).
 
 
 
