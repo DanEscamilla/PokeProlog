@@ -54,6 +54,7 @@ remplazarIndice(I,E,[H|C],[H|LR]):-
   remplazarIndice(NI,E,C,LR),!.
 
 esEnter(13).
+esEnter(27). % Tambien funciona con escape
 
 esperarRespuesta :-
   get_single_char(_),

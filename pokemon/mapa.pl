@@ -23,6 +23,7 @@ codigoADireccion(100,"Derecha").
 codigoADireccion(97,"Izquierda").
 codigoADireccion(115,"Abajo").
 codigoADireccion(119,"Arriba").
+codigoADireccion(109,"Mochila").
 codigoADireccion(50,"Transicion Entrada").
 codigoADireccion(49,"Transicion Salida").
 codigoADireccion(27,"Terminar el programa").
@@ -55,6 +56,9 @@ moverse:-
 %   abort.
 accionOpcion(Direccion):-
   moverJugador(Direccion),
+  correr.
+accionOpcion("Mochila"):-
+  mostrarMochila,
   correr.
 
 moverJugador(Direccion):-
@@ -197,7 +201,7 @@ imprimirCeldaAjustada(_,YEnVista):-
 imprimirCeldaAjustada(_,_):-write("   ").
 
 elegirOpcionMoverse(ElementoElegido):-
-  write("Utiliza las w/a/s/d para moverte"),nl,
+  write("Utiliza las w/a/s/d para moverte o \"m\" para ver tu mochila"),nl,
   leerDireccion(ElementoElegido).
 
 leerDireccion(ElementoElegido):-

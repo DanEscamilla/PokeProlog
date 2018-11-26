@@ -1,8 +1,6 @@
 % TODO
-% agregar cambiar pokemones de con bill.
 % limpiar la impresion de mensajes con shell(clear) y esperarRespuesta
 % mostrar barras de vida (con animaciones).
-% agregar tipo a ataques.
 :-ensure_loaded("hechos.pl").
 :-ensure_loaded("funciones-genericas.pl").
 :-ensure_loaded("mapa.pl").
@@ -17,10 +15,6 @@ jugarPokemon:-
   enCiudad.
 
 enCiudad:-abrirMapaCiudad.
-
-% elegirAccionEnCiudad:-
-%   nl,elegirOpcion("A donde deseas ir?",["Ir a hospital","Ir a gimnasio","Ir a tienda","Inspeccionar Mochila","Ir a otra ciudad"],OpcionElegida),nl,
-%   posibilidadesCiudad(OpcionElegida).
 
 posibilidadesCiudad("Ir a hospital"):-
   irAHospital,
@@ -39,10 +33,6 @@ posibilidadesCiudad("Ir a otra ciudad"):-
 
 irACiudad:-
   abrirMapaGlobal.
-% llendoACiudad:-
-%   posibilidadesCamino,
-%   llegarACiudad,
-%   enCiudad.
 
 
 
