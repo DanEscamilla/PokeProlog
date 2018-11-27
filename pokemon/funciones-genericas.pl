@@ -56,12 +56,20 @@ remplazarIndice(I,E,[H|C],[H|LR]):-
 esEnter(13).
 esEnter(27). % Tambien funciona con escape
 
+
+contarInstancias(_,[],S,S).
+contarInstancias(X,[X|T],S,Res):-
+  S2 is 1+S,
+  contarInstancias(X,T,S2,Res).
+contarInstancias(X,[_|T],S,Res):-contarInstancias(X,T,S,Res).
+
+
 esperarRespuesta :-
   get_single_char(_),
-  write("Presiona enter para continuar"),nl,
+  write("...Presiona enter para continuar"),nl,
   esperarRespuestaValidada.
 esperarRespuesta1Enter:-
-  write("Presiona enter para continuar"),nl,
+  write("...Presiona enter para continuar"),nl,
   esperarRespuestaValidada.
 esperarRespuestaValidada:-
   get_single_char(C),esEnter(C).

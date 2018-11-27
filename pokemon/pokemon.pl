@@ -1,5 +1,4 @@
 % TODO
-% limpiar la impresion de mensajes con shell(clear) y esperarRespuesta
 % mostrar barras de vida (con animaciones).
 :-ensure_loaded("hechos.pl").
 :-ensure_loaded("funciones-genericas.pl").
@@ -54,8 +53,9 @@ accionEligirRetiro("Pokemon"):-
   quitarPokemonBill(Pokemon),
   agregarPokemonNombradoAMochila(Pokemon).
 accionEligirRetiro("Pokehuevo"):-
+  shell(clear),
   pokehuevosBill(Pokehuevos),
-  elegirOpcion("Que pokehuevo quieres pedirle a Bill? ",Pokehuevos,Pokehuevo),
+  nl,elegirOpcion("Que pokehuevo quieres pedirle a Bill? ",Pokehuevos,Pokehuevo),nl,
   quitarPokehuevoBill(Pokehuevo),
   agregarPokehuevoAMochila(Pokehuevo).
 
@@ -107,7 +107,7 @@ accionEntrarGimasio:-accionEntrarGimasio.
 
 accionEntrarGimasio(retar):-iniciarPeleaGimnasio.
 accionEntrarGimasio(salir):-
-  write("Saliste del gimnasio"),nl,nl.
+  nl,write("Saliste del gimnasio"),nl,nl.
 
 
 
@@ -165,7 +165,8 @@ comprarPokebola(Pokebola):-
   Pokebola = [_,Precio|_],
   gastarDinero(Precio),
   agregarPokebolaAMochila(Pokebola),
-  write("Vuelva pronto!"),nl,nl.
+  esperarRespuesta1Enter,
+  irATienda.
 comprarPokebola(_):-
   dineroEntrenador(Dinero),
   write("No tienes dinero suficiente para esa pokebola! solo tienes: "),write(Dinero),write(" PokePesos"),nl,nl,
@@ -241,6 +242,7 @@ irAHospital:-
 
 
 encontrarEntrenador:-
+  transicionSalida,
   generarEntrenador,
   imprimirEntrenadorActivo,
   accionEncontrarEntrenador.
@@ -281,9 +283,11 @@ iniciarPeleaEntrenador:-
   obtenerDinero(Dinero).
 
 iniciarPeleaEntrenador(Pokemon):-
-  write("El entrenador enemigo eligio su pokemon! "),nl,
+  shell(clear),
+  nl,write("El entrenador enemigo eligio su pokemon! "),nl,
   mostrarPokemonEnemigo(Pokemon),nl,
   cambiarHecho(pokemonEnemigo(_),pokemonEnemigo(Pokemon)),
+  esperarRespuesta1Enter,
   iniciarPelea.
 
 obtenerDinero(Dinero):-
@@ -328,7 +332,6 @@ accionEncontrarPokemon(pelear,Pokemon):-
   esperarRespuesta1Enter.
 accionEncontrarPokemon(correr,_).
 
-
 % --- iniciar pelea ---
 
 
@@ -364,21 +367,25 @@ tienesPokemonesVivos:-
 pelea:-ataqueJugador.
 
 ataqueJugador:-
+  mostrarBarrasDeVida,
   pokemonActivo(Pokemon),
   pokemonEnemigo(PokemonEnemigo),
   estaVivo(Pokemon),
   elegirAtaque(Ataque),!,
   calcularPoderAtaque(Pokemon,Ataque,PoderAtaque),
-  calcularEfectividad(Pokemon,PokemonEnemigo,PoderAtaque,PoderAtaqueModificado),
+  calcularEfectividad(Pokemon,PokemonEnemigo,PoderAtaque,PoderAtaqueModificado,Modificador),
   atacarPokemon(PoderAtaqueModificado,PokemonEnemigo,PokemonEnemigoLastimado),
   cambiarHecho(pokemonEnemigo(_),pokemonEnemigo(PokemonEnemigoLastimado)),
   nombreMiPokemon(Pokemon,Nombre),
   obtenerNombre(PokemonEnemigo,NombreEnemigo),
   pokemonVidaActual(PokemonEnemigoLastimado,VidaRestanteEnemigo),
-  write(Nombre),write(" utilizo "),write(Ataque),write(", hiciste "),write(PoderAtaqueModificado),write(" de dano!"),nl,
+  mostrarBarrasDeVida,
+  write(Nombre),write(" utilizo "),write(Ataque),mensajeEfectividad(Modificador),write(" hiciste "),write(PoderAtaqueModificado),write(" de dano!"),nl,
   write("El "),write(NombreEnemigo),write(" enemigo tiene "),write(VidaRestanteEnemigo),write(" de vida restante."),nl,nl,
+  esperarRespuesta1Enter,
   ataqueEnemigo.
-ataqueJugador:-terminoPelea.
+ataqueJugador:-
+  terminoPelea.
 
 ataqueEnemigo:-
   pokemonActivo(Pokemon),
@@ -386,16 +393,19 @@ ataqueEnemigo:-
   estaVivo(PokemonEnemigo),
   elegirAtaqueRandom(PokemonEnemigo,Ataque),
   calcularPoderAtaque(PokemonEnemigo,Ataque,PoderAtaque),
-  calcularEfectividad(PokemonEnemigo,Pokemon,PoderAtaque,PoderAtaqueModificado),
+  calcularEfectividad(PokemonEnemigo,Pokemon,PoderAtaque,PoderAtaqueModificado,Modificador),
   atacarPokemon(PoderAtaqueModificado,Pokemon,PokemonLastimado),
   cambiarHecho(pokemonActivo(_),pokemonActivo(PokemonLastimado)),
   nombreMiPokemon(Pokemon,Nombre),
   obtenerNombre(PokemonEnemigo,NombreEnemigo),
   pokemonVidaActual(PokemonLastimado,VidaRestante),
-  write("El "),write(NombreEnemigo),write(" enemigo utilizo "),write(Ataque),write(", te hizo "),write(PoderAtaqueModificado),write(" de dano!"),nl,
+  mostrarBarrasDeVida,
+  nl,write("El "),write(NombreEnemigo),write(" enemigo utilizo "),write(Ataque),mensajeEfectividad(Modificador),write(" te hizo "),write(PoderAtaqueModificado),write(" de dano!"),nl,
   write(Nombre),write(" tiene "),write(VidaRestante),write(" de vida restante."),nl,nl,
+  esperarRespuesta1Enter,
   ataqueJugador.
-ataqueEnemigo:-terminoPelea.
+ataqueEnemigo:-
+  terminoPelea.
 
 % Elige un ataque para el enemigo
 elegirAtaqueRandom(Pokemon,Ataque):-
@@ -434,24 +444,26 @@ calcularPoderAtaque(Pokemon,Ataque,PoderAtaque):-
   random(PoderMinAjustado,PoderMaxAjustado,Rand),
   PoderAtaque is round(Rand) .
 
-calcularEfectividad(Pokemon,PokemonEnemigo,PoderAtaque,PoderModificado):-
+calcularEfectividad(Pokemon,PokemonEnemigo,PoderAtaque,PoderModificado,Modificador):-
   pokemonTipo(Pokemon,Tipo),
   pokemonTipo(PokemonEnemigo,TipoEnemigo),
   debilidades(TipoEnemigo,Tipo,Modificador),
-  mensajeEfectividad(Modificador),
   PoderModificado is PoderAtaque * Modificador.
-calcularEfectividad(_,_,PoderAtaque,PoderAtaque).
+calcularEfectividad(_,_,PoderAtaque,PoderAtaque,1).
 
-mensajeEfectividad(2):-write("SUPER EFECTIVO!"),nl.
-mensajeEfectividad(1.5):-write("EFECTIVO!"),nl.
-mensajeEfectividad(_).
+mensajeEfectividad(2):-write(", es Super efectivo!").
+mensajeEfectividad(1.5):-write(", es Efectivo!").
+mensajeEfectividad(_):-write(",").
 
 % --- terminar pelea ---
 
 
 terminoPelea:-
-  tab(5),write("TERMINO PELEA"),nl,nl,
-  validarGanador.
+  shell(clear),nl,
+  tab(5),write("Termino la pelea"),nl,nl,
+  validarGanador,
+  esperarRespuesta1Enter,
+  shell(clear).
 
 validarGanador:-
   pokemonActivo(Pokemon),
@@ -491,7 +503,7 @@ aumentarExperiencia(Pokemon,Incremento,NuevoPokemon):-
   calculaExperienciaNecesaria(Nivel,NuevaExperiencia,ExperienciaNecesaria),
   ExperienciaNecesaria > 0,
   actualizaExperiencia(Pokemon,NuevaExperiencia,NuevoPokemon),
-  write(NombreDado),write(" obtuvo "),write(Incremento),write(" de experiencia. Experiencia faltante para subir nivel: "),write(ExperienciaNecesaria),nl,nl.
+  write(NombreDado),write(" obtuvo "),write(Incremento),write(" de experiencia."),nl,write("Experiencia faltante para subir nivel: "),write(ExperienciaNecesaria),nl,nl.
 
 % Subio de nivel
 aumentarExperiencia(Pokemon,Incremento,NuevoPokemon):-
@@ -502,7 +514,7 @@ aumentarExperiencia(Pokemon,Incremento,NuevoPokemon):-
   NuevoNivel is Nivel + 1,
   NuevaVidaMax is VidaMax + 20,
   NuevoPokemon = [Nombre,Tipo,NuevaVidaMax,NuevaVidaMax,excelente,NuevaExperiencia,NuevoNivel,Ataques,NombrePersonalizado],
-  write(NombrePersonalizado),write(" HA SUBIDO DE NIVEL!!! AHORA ES NIVEL "),write(NuevoNivel),nl,nl.
+  write(NombrePersonalizado),write(" ha subido de nivel!!! Ahora es nivel "),write(NuevoNivel),nl,nl.
 
 %  Calular experiencia necesaria para subir de nivel
 calculaExperienciaNecesaria(Nivel,ExperienciaActual,ExperienciaNecesaria):-
@@ -538,16 +550,17 @@ capturarPokemon:- % no se puede capturar si el entrenado no tiene pokebolas
 
 capturarPokemon:-
   pokemonEnemigo(PokemonVencido),
-  % remplazarIndice(3,100,PokemonVencido,PokemonVencido2), % debug
-  % remplazarIndice(5,excelente,PokemonVencido,PokemonVencido2), % debug
   obtenerNombre(PokemonVencido,TipoPokemon),
-  write("Deseas Capturar al "),write(TipoPokemon),write("?"),
-  elegirOpcion("",[no,si],Opcion),
+  shell(clear),
+  nl,write("Deseas Capturar al "),write(TipoPokemon),write("?"),nl,
+  mostrarPokemonEnemigo(PokemonVencido),
+  elegirOpcion("",[no,si],Opcion),nl,
   accionCapturarPokemon(Opcion,PokemonVencido).
 
 accionCapturarPokemon(si,Pokemon):-
   pokebolasEntrenador(PokebolasEntrenador),
-  elegirOpcion("Que pokebola deseas utilizar?",PokebolasEntrenador,PokebolaElegida),
+  shell(clear),
+  nl,elegirOpcion("Que pokebola deseas utilizar?",PokebolasEntrenador,PokebolaElegida),nl,
   intentarCapturar(PokebolaElegida,Pokemon).
 
 accionCapturarPokemon(no,_).
@@ -588,7 +601,7 @@ encontrarPokebola:-
   shell(clear),
   pokerbolaRandom(Pokebola),
   Pokebola = [Nombre|_],
-  nl,write("Encontraste una pokebola "),write(Nombre),write("!"),nl,
+  nl,write("Encontraste una pokebola "),write(Nombre),write("!"),nl,nl,
   agregarPokebolaAMochila(Pokebola),
   esperarRespuesta1Enter.
 
@@ -820,7 +833,7 @@ agregarPokemonNombradoAMochila(PokemonNombrado):-
   append(Pokemones,[PokemonNombrado],NuevosPokemones),
   cambiarHecho(pokemonesEntrenador(_),pokemonesEntrenador(NuevosPokemones)),
   nombreMiPokemon(PokemonNombrado,Nombre),
-  nl,write(Nombre),write(" fue agregado a tu mochila."),nl,nl,
+  write(Nombre),write(" fue agregado a tu mochila."),nl,nl,
   esperarRespuesta1Enter.
 agregarPokemonNombradoAMochila(PokemonNombrado):-agregarPokemonNombradoAMochila(PokemonNombrado).
 
@@ -860,7 +873,7 @@ accionNoEspacioParaPokehuevo(Pokehuevo):-
 accionNoEspacioParaPokehuevo(Pokehuevo):-accionNoEspacioParaPokehuevo(Pokehuevo).
 
 leerOpcionesMochilaLLena(Opciones,Eleccion):-
-  leerOpcion(Eleccion),
+  leerOpcion(Eleccion),nl,
   member(Eleccion,Opciones).
 leerOpcionesMochilaLLena(Opciones,Eleccion):-leerOpcionesMochilaLLena(Opciones,Eleccion).
 
@@ -1027,6 +1040,7 @@ mostrarMochila:-
   mostrarPokemonesEntrenador,nl,
   mostrarPokehuevos,nl,
   mostrarDinero,nl,
+  mostrarPokebolas,nl,
   mostrarMedallas,nl,nl,
   esperarRespuesta1Enter,
   shell(clear).
@@ -1057,3 +1071,61 @@ mostrarMedalla(Ciudad):-
 mostrarDinero:-
   dineroEntrenador(Dinero),
   write("Dinero: "),write(Dinero),write(" PokePesos"),nl.
+
+mostrarPokebolas:-
+  write("Pokebolas Jugador:"),nl,
+  pokebolas(Pokebolas),
+  forall(member([Tipo|_],Pokebolas),mostrarCantidadDePokebola(Tipo)).
+mostrarCantidadDePokebola(Tipo):-
+  pokebolasEntrenador(PokebolasEntrenador),
+  contarInstancias([Tipo|_],PokebolasEntrenador,0,Cantidad),
+  tab(5),write("Tienes "),write(Cantidad),write(" pokebolas tipo "),write(Tipo),nl.
+
+mostrarBarrasDeVida:-
+  shell(clear),
+  pokemonActivo(PokemonActivo),
+  pokemonEnemigo(PokemonEnemigo),
+  mostrarNombres(PokemonActivo,PokemonEnemigo),
+  mostrarBarras(PokemonActivo,PokemonEnemigo),nl.
+
+mostrarNombres(PokemonActivo,PokemonEnemigo):-
+  nombreMiPokemon(PokemonActivo,Nombre),
+  obtenerNombre(PokemonEnemigo,NombreEnemigo),
+  string_length(Nombre,LongitudNombre),
+  string_length(NombreEnemigo,LongitudNombreEnemigo),
+  vista(AnchuraVista,_),
+  CaracteresAnchura is AnchuraVista * 3,
+  EspaciosEntreNombres is CaracteresAnchura - LongitudNombre - LongitudNombreEnemigo,
+  write(Nombre),tab(EspaciosEntreNombres),write(NombreEnemigo),nl.
+
+mostrarBarras(PokemonActivo,PokemonEnemigo):-
+  vista(AnchuraVista,_),
+  AnchuraCaracteres is AnchuraVista * 3,
+  AnchuraBarra is floor(AnchuraCaracteres/3),
+  EspaciosEntreNombres is AnchuraCaracteres - 4 - (AnchuraBarra *2),
+  mostrarBarraJugador(PokemonActivo,AnchuraBarra),
+  tab(EspaciosEntreNombres),
+  mostrarBarraEnemigo(PokemonEnemigo,AnchuraBarra),nl.
+
+mostrarBarraJugador(PokemonActivo,AnchuraBarra):-
+  pokemonVidaActual(PokemonActivo,Vida),
+  pokemonVidaMax(PokemonActivo,VidaMax),
+  write("|"),
+  Porcentaje is ceil((Vida/VidaMax)*AnchuraBarra),
+  forall(between(1,AnchuraBarra,X),
+  (
+    (X=<Porcentaje,write("\\"));
+    (write("_"))
+  )),
+  write("|").
+mostrarBarraEnemigo(PokemonEnemigo,AnchuraBarra):-
+  pokemonVidaActual(PokemonEnemigo,Vida),
+  pokemonVidaMax(PokemonEnemigo,VidaMax),
+  write("|"),
+  Porcentaje is AnchuraBarra-ceil((Vida/VidaMax)*AnchuraBarra),
+  forall(between(1,AnchuraBarra,X),
+  (
+    (X<Porcentaje,write("_"));
+    (write("/"))
+  )),
+  write("|").

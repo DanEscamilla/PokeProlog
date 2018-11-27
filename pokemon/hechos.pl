@@ -166,7 +166,7 @@ generarLiderDeGimnasio(_,_).
 ciudadActual("Paleta").
 pokemonesEntrenador([]).
 pokebolasEntrenador([[normal,10,0.5],[normal,10,0.5],[normal,10,0.5]]).
-dineroEntrenador(0).
+dineroEntrenador(1000).
 pokehuevosEntrenador([]).
 medallasEntrenador([]).
 

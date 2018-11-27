@@ -22,8 +22,8 @@ abrirMapaGlobal:-
   abrirMapa.
 
 posibilidadesCamino:-
-  random(RandomNum).
-  % posibilidadCamino(RandomNum).
+  random(RandomNum),
+  posibilidadCamino(0.99).
 
 posibilidadCamino(RandomNum):-RandomNum< 0.9 . % 90% que no pase nada
 posibilidadCamino(RandomNum):-
@@ -37,7 +37,6 @@ posibilidadCamino(RandomNum):-
   encontrarPokemon.
 posibilidadCamino(RandomNum):-
   RandomNum=<1, %  20% de probabilidad de que el encuentro sea un entrenador
-  transicionSalida,
   encontrarEntrenador.
 
 jugadorSeMovioAdaptadorGlobal:-
