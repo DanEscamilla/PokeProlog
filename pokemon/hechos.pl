@@ -52,11 +52,11 @@ pokemonesEspeciales([
 ]).
 
 % relacion entre ataques y que tipo son.
-tipoAtaques(piedra,["Lanzarrocas","Golpe roca","Pedrada","Avalancha","Taladradora","Roca afilada","Terremoto","Avalancha","Tumbar rocas"]).
-tipoAtaques(agua,["Cascada","Pistola de agua","Burbuja","Hidropulso","Pistola de agua","Rayo burbuja","Hidrocanon","Salpicar","Ventisca","Rayo hielo","Ciclon"]).
-tipoAtaques(fuego,["Llamarada final","Calcinacion","Lanzallamas","Onda ignea","Llamarada","Nitrocarga","Giro fuego","Golpe fuego","Pirotecnia"]).
-tipoAtaques(planta,["Latigo cepa","Polvo veneno","Somnifero","Paralizador","Acido","Latigazo"]).
-tipoAtaques(electricidad,["Electrocanon","Impactrueno","Chispa","Voltio cruel","Trueno","Bola voltio","Doble rayo","Rayo","Golpe Trueno"]).
+% tipoAtaques(piedra,["Lanzarrocas","Golpe roca","Pedrada","Avalancha","Taladradora","Roca afilada","Terremoto","Avalancha","Tumbar rocas"]).
+% tipoAtaques(agua,["Cascada","Pistola de agua","Burbuja","Hidropulso","Pistola de agua","Rayo burbuja","Hidrocanon","Salpicar","Ventisca","Rayo hielo","Ciclon"]).
+% tipoAtaques(fuego,["Llamarada final","Calcinacion","Lanzallamas","Onda ignea","Llamarada","Nitrocarga","Giro fuego","Golpe fuego","Pirotecnia"]).
+% tipoAtaques(planta,["Latigo cepa","Polvo veneno","Somnifero","Paralizador","Acido","Latigazo"]).
+% tipoAtaques(electricidad,["Electrocanon","Impactrueno","Chispa","Voltio cruel","Trueno","Bola voltio","Doble rayo","Rayo","Golpe Trueno"]).
 
 %Evoluciones
 % pokemon original, evolucion, nivel requerido.
@@ -103,7 +103,7 @@ debilidades(_,_,1).
 % definir cuanto baja cada habilidad
 
 definirPoderesDeAtaque:-
-  retractall(habilidad(_,_)),
+  retractall(habilidad(_,_,_)),
   pokemonesEspeciales(PokemonesEspeciales),
   pokemones(PokemonesNormales),
   append(PokemonesNormales,PokemonesEspeciales,Pokemones),
@@ -112,6 +112,7 @@ definirPoderesDeAtaque:-
     member(Pokemon,Pokemones),
     pokemonAtaques(Pokemon,Ataques)
   ),definirPoderDeAtaque(Ataques)).
+  % cambiarHecho(habilidad("Impactrueno",_,_),habilidad("Impactrueno",10000,10001)).
 
 definirPoderDeAtaque(Habilidades):-
   forall(member(Habilidad,Habilidades),
@@ -121,7 +122,6 @@ definirPoderDeAtaque(Habilidades):-
     Max is 40 + (40 - RandomMin),
     assert(habilidad(Habilidad,RandomMin,Max))
   )).
-  % cambiarHecho(habilidad(impactrueno,1000,1000),habilidad(impactrueno,_,_)).
 pokemonesIniciales(["pikachu","bulbasaur","charmander","squirtle"]).
 
 % CIUDADES
@@ -174,8 +174,8 @@ medallasEntrenador([]).
 % --- ESTADO BILL
 
 
-pokemonesBill([["charmander",fuego,120,120,excelente,0,1,["Lanzallamas","Onda ignea","Llamarada","Mordisco"],"pene"]]).
-pokehuevosBill([[fuego,160],[agua,140],[piedra,120]]).
+pokemonesBill([]).
+pokehuevosBill([]).
 
 
 

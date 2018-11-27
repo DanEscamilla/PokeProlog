@@ -641,20 +641,32 @@ perdisteElJuego:-
 % Capturaste a todos
 
 checarSiCapturasteATodos:-
-  pokemones(Pokemones),
+  checarSiCapturasteATodos2.
+checarSiCapturasteATodos.
+
+checarSiCapturasteATodos2:-
   pokemonesEntrenador(PokemonesEntrenador),
   pokemonesBill(PokemonesBill),
   append(PokemonesEntrenador,PokemonesBill,TodosTusPokemones),
-  obtenerNombresPokemones(TodosTusPokemones,TusPokemonesNombres),
-  obtenerNombresPokemones(Pokemones,PokemonesNombres),
-  list_to_set(TusPokemonesNombres,TusPokemonesSet),
-  sort(TusPokemonesSet,TusPokemonesOrdenados),
-  sort(PokemonesNombres,PokemonesOrdenados),
-  PokemonesOrdenados = TusPokemonesOrdenados,
+  listaDeTipos(TiposExisten),
+  listaDeTipos([],MisTipos,TodosTusPokemones),!,
+  length(TiposExisten,LongitudTipos),
+  length(MisTipos,LongitudTipos),
   write("Has capturado a todos los pokemones!!"),nl,
   write("Felicidades, Ganaste!"),nl,nl,
   abort.
-checarSiCapturasteATodos.
+
+
+listaDeTipos(Lista):-
+  pokemones(Pokemones),
+  listaDeTipos([],Lista,Pokemones).
+listaDeTipos(Lista,Lista,[]).
+listaDeTipos(Acumulador,Lista,[Pokemon|Pokemones]):-
+  Pokemon = [_,Tipo|_],
+  not(member(Tipo,Acumulador)),
+  listaDeTipos([Tipo|Acumulador],Lista,Pokemones).
+listaDeTipos(Acumulador,Lista,[_|Pokemones]):-listaDeTipos(Acumulador,Lista,Pokemones).
+
 
 obtenerNombresPokemones(Pokemones,PokemonesNombre):-
   findall(Nombre,

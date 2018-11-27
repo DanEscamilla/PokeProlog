@@ -2,7 +2,7 @@
   posicionJugadorGlobal/2.
 
 % posicionJugadorGlobal(15,10).
-posicionJugadorGlobal(25,132).
+posicionJugadorGlobal(15,10).
 
 definirMapaGlobal:-
   retractall(transicion(_)),
@@ -23,7 +23,7 @@ abrirMapaGlobal:-
 
 posibilidadesCamino:-
   random(RandomNum),
-  posibilidadCamino(0.99).
+  posibilidadCamino(RandomNum).
 
 posibilidadCamino(RandomNum):-RandomNum< 0.9 . % 90% que no pase nada
 posibilidadCamino(RandomNum):-
